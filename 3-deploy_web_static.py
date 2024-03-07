@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 Distributes an archive to my web servers,
-using the function do_deploy
+using the function deploy
 """
 from fabric.api import *
 from datetime import datetime
@@ -9,6 +9,14 @@ import os
 
 env.hosts = ['54.144.136.64', '100.24.236.179']
 env.user = 'ubuntu'
+
+
+def deploy():
+    ''' Deploys archive '''
+    archive_path = do_pack()
+    if not archive_path:
+        return False
+    return do_deploy(archive_path)
 
 
 def do_pack():
@@ -24,6 +32,7 @@ def do_pack():
         local('tar -cvzf {} web_static'.format(archive_path))
         print('web_static packed: {} -> {}'.format(archive_path,
               os.path.getsize(archive_path)))
+        return archive_path
     except:
         return None
 
