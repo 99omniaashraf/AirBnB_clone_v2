@@ -44,26 +44,27 @@ def show_number(n):
 
 @app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
 def show_odd_or_even(n):
-    """ Display a template with information about whether the number is odd or even """
     if isinstance(n, int):
-        parity = 'even' if n % 2 == 0 else 'odd'
-        return render_template('6-number_odd_or_even.html', number=n, parity=parity)
+        if n % 2 == 0:
+            p = 'even'
+        else:
+            p = 'odd'
+        return render_template('6-number_odd_or_even.html', number=n, parity=p)
     else:
         return "404 Not Found"
 
 
+@app.teardown_appcontext
+def teardown_db(exception):
+    """Closes the current SQLAlchemy Session."""
+    storage.close()
+
+
 @app.route('/states_list', strict_slashes=False)
 def states_list():
-    """ Display a list of states sorted by name """
-    states = storage.all(State)
-    sorted_states = sorted(states.values(), key=lambda state: state.name)
-    return render_template('7-states_list.html', states=sorted_states)
-
-
-@app.teardown_appcontext
-def close(error):
-    """ Close the storage engine """
-    storage.close()
+    """Displays a list of states sorted by name."""
+    states = sorted(list(storage.all(State).values()), key=lambda x: x.name)
+    return render_template('7-states_list.html', states=states)
 
 
 if __name__ == '__main__':
