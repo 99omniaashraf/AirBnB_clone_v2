@@ -1,17 +1,16 @@
 #!/usr/bin/python3
-""" Start a web application """
-
-
+""" module doc """
 from flask import Flask
-
 
 app = Flask(__name__)
 
 
 @app.route("/", strict_slashes=False)
-def Hello():
+def hello():
+    """ def doc """
     return "Hello HBNB!"
 
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+# Add a newline at the end of the file 
